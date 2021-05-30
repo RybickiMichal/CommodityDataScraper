@@ -2,32 +2,34 @@ package pl.investadvisor.datascraper.service;
 
 import org.springframework.stereotype.Service;
 import pl.investadvisor.datascraper.exception.NoDataException;
+import pl.investadvisor.datascraper.model.Commodity;
 import pl.investadvisor.datascraper.model.CommodityPrice;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 @Service
-public class YahooFinanceFetchDataService {
+public class YahooFinanceDataService {
 
     private Stock stock;
 
-    public CommodityPrice getYahooFinanceData(String index) {
+    public CommodityPrice getStockPrice(Commodity commodity) {
         try {
-            return fetchYahooFinanceData(index);
+            return fetchStockPrice(commodity);
         } catch (IOException e) {
-            throw new NoDataException("No data from Yahoo Finance for " + index);
+            throw new NoDataException("No data from Yahoo Finance for " + commodity.getIndex());
         }
     }
 
-    private CommodityPrice fetchYahooFinanceData(String index) throws IOException {
-        stock = YahooFinance.get(index);
+    private CommodityPrice fetchStockPrice(Commodity commodity) throws IOException {
+        stock = YahooFinance.get(commodity.getIndex());
         return CommodityPrice.builder()
-                .index(index)
-                .name(stock.getName())
+                .commodityId(commodity.getCommodityId())
                 .price(stock.getQuote().getPrice())
                 .currency(stock.getCurrency())
+                .time(LocalTime.now().toNanoOfDay())
                 .build();
     }
 }

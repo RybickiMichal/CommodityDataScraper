@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DynamoDbConfig {
 
-
     @Value("${aws.dynamodb.service.endpoint}")
     private String SERVICE_ENDPOINT;
 
@@ -25,7 +24,6 @@ public class DynamoDbConfig {
 
     @Value("${aws.dynamodb.secretkey}")
     private String SECRET_KEY;
-
 
     @Bean
     public DynamoDBMapper mapper() {
