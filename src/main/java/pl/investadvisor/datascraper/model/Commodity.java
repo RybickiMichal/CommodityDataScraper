@@ -21,12 +21,8 @@ public class Commodity {
 
     private String dataSource;
 
-//    @DynamoDBTypeConvertedEnum
-//    @NonNull
-//    private CommodityType commodityType;
-//
-//    @DynamoDBTypeConvertedEnum
-//    @NonNull
-//    private CommodityCountry country;
+    @DynamoDBTypeConvertedEnum
+    @NonNull
+    private CommodityType commodityType;
 
 }

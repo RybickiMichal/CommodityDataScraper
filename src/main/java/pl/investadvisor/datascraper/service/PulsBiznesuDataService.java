@@ -10,7 +10,7 @@ import pl.investadvisor.datascraper.model.CommodityPrice;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -20,7 +20,7 @@ public class PulsBiznesuDataService {
         try {
             return scrapeStockPrice(commodity);
         } catch (IOException e) {
-            throw new NoDataException("No data from Yahoo Finance for " + commodity.getIndex());
+            throw new NoDataException("No data from Puls Biznesu for " + commodity.getIndex());
         }
     }
 
@@ -31,7 +31,7 @@ public class PulsBiznesuDataService {
                 .commodityId(commodity.getCommodityId())
                 .price(new BigDecimal(price))
                 .currency("PLN")
-                .time(LocalTime.now().toNanoOfDay())
+                .date(new Date())
                 .build();
     }
 }

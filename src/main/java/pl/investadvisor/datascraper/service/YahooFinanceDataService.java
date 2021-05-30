@@ -8,7 +8,7 @@ import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 
 import java.io.IOException;
-import java.time.LocalTime;
+import java.util.Date;
 
 @Service
 public class YahooFinanceDataService {
@@ -29,7 +29,7 @@ public class YahooFinanceDataService {
                 .commodityId(commodity.getCommodityId())
                 .price(stock.getQuote().getPrice())
                 .currency(stock.getCurrency())
-                .time(LocalTime.now().toNanoOfDay())
+                .date(new Date())
                 .build();
     }
 }
