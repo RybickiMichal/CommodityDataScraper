@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper.service;
+package pl.investadvisor.datascraper.service.pricescraping;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +18,9 @@ import static pl.investadvisor.datascraper.model.CommodityType.ETF;
 
 @Service
 @Slf4j
-public class FinageDataService {
+public class FinageService {
 
-    public FinageDataService(RestTemplate restTemplate) {
+    public FinageService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

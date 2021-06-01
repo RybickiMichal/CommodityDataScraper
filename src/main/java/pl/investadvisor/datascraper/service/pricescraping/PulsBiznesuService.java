@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper.service;
+package pl.investadvisor.datascraper.service.pricescraping;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -14,7 +14,7 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class PulsBiznesuDataService {
+public class PulsBiznesuService {
 
     public CommodityPrice getStockPrice(Commodity commodity) {
         try {
@@ -26,7 +26,10 @@ public class PulsBiznesuDataService {
 
     private CommodityPrice scrapeStockPrice(Commodity commodity) throws IOException {
         Document document = Jsoup.connect(commodity.getDataSource()).get();
-        String price = document.getElementsByClass("profilLast").text().replaceAll(" ", "").replace(",", ".").replace("zł", "");
+        String price = document.getElementsByClass("profilLast").text()
+                .replaceAll(" ", "")
+                .replace(",", ".")
+                .replace("zł", "");
         return CommodityPrice.builder()
                 .commodityId(commodity.getCommodityId())
                 .price(new BigDecimal(price))

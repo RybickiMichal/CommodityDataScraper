@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper.service;
+package pl.investadvisor.datascraper.service.pricescraping;
 
 import org.springframework.stereotype.Service;
 import pl.investadvisor.datascraper.exception.NoDataException;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @Service
-public class YahooFinanceDataService {
+public class YahooFinanceService {
 
     private Stock stock;
 

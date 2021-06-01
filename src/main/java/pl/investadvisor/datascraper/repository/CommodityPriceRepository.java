@@ -5,14 +5,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.investadvisor.datascraper.model.CommodityPrice;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Repository
 public class CommodityPriceRepository {
 
     private DynamoDBMapper dynamoDBMapper;
 
-    public CommodityPrice addCommodityPrice(CommodityPrice commodityPrice){
-        dynamoDBMapper.save(commodityPrice);
-        return commodityPrice;
+    public List<CommodityPrice> saveCommodityPrices(List<CommodityPrice> commodityPrices){
+        commodityPrices.forEach(commodityPrice -> dynamoDBMapper.save(commodityPrice));
+        return commodityPrices;
     }
 }

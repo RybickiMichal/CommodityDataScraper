@@ -8,5 +8,4 @@ public class FinageCommodity {
     private String symbol;
     private String price;
     private String timestamp;
-
 }
