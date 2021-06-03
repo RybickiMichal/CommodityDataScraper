@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper;
+package pl.investadvisor.datascraper.exampledata;
 
 import pl.investadvisor.datascraper.model.Commodity;
 

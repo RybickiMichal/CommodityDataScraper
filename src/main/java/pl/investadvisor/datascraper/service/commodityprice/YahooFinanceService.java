@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper.service.pricescraping;
+package pl.investadvisor.datascraper.service.commodityprice;
 
 import org.springframework.stereotype.Service;
 import pl.investadvisor.datascraper.exception.NoDataException;

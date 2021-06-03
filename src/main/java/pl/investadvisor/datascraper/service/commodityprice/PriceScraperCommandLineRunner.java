@@ -1,9 +1,8 @@
-package pl.investadvisor.datascraper.service;
+package pl.investadvisor.datascraper.service.commodityprice;
 
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import pl.investadvisor.datascraper.service.pricescraping.PriceScrapeService;
 
 @AllArgsConstructor
 @Component

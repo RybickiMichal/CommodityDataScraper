@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper.service.pricescraping;
+package pl.investadvisor.datascraper.service.commodityprice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +57,5 @@ public class FinageService {
         } else {
             return format("https://api.finage.co.uk/last/crypto/%susd?apikey=%s", index, FINAGE_APIK_KEY);
         }
-
     }
 }

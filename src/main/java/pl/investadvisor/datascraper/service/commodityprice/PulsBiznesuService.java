@@ -1,4 +1,4 @@
-package pl.investadvisor.datascraper.service.pricescraping;
+package pl.investadvisor.datascraper.service.commodityprice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
