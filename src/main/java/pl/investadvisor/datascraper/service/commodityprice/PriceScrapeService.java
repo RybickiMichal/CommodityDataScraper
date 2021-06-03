@@ -32,10 +32,9 @@ public class PriceScrapeService {
         List<Commodity> commodities = commodityRepository.getAllCommodities();
 
         List<CommodityPrice> commodityPrices = new ArrayList();
-        //commented due to limited FINAGE API calls
-//        commodityPrices.addAll(scrapePricesFromFinage(commodities.stream()
-//                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
-//                .collect(toList())));
+        commodityPrices.addAll(scrapePricesFromFinage(commodities.stream()
+                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
+                .collect(toList())));
         commodityPrices.addAll(scrapePricesFromPulsBiznesu(commodities.stream()
                 .filter(commodity -> PULS_BIZNSU.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
