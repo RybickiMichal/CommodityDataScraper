@@ -25,7 +25,14 @@ public class PulsBiznesuService {
     }
 
     private CommodityPrice scrapeStockPrice(Commodity commodity) throws IOException {
-        Document document = Jsoup.connect(commodity.getDataSource()).get();
+        Document document;
+        try {
+            document = Jsoup.connect(commodity.getDataSource()).get();
+        } catch (Exception exception) {
+            log.error("Wrong index or website for stock " + commodity);
+            return null;
+        }
+
         String price = document.getElementsByClass("profilLast").text()
                 .replaceAll(" ", "")
                 .replace(",", ".")

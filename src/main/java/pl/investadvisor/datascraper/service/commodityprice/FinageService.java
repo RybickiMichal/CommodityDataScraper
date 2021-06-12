@@ -31,7 +31,14 @@ public class FinageService {
 
     public CommodityPrice getEtfPrice(Commodity commodity) {
         String url = buildUrl(commodity.getIndex(), ETF);
-        FinageCommodity finageCommodity = restTemplate.getForObject(url, FinageCommodity.class);
+        FinageCommodity finageCommodity;
+        try {
+            finageCommodity = restTemplate.getForObject(url, FinageCommodity.class);
+        } catch (Exception exception) {
+            log.error("Wrong index for ETF " + commodity);
+            return null;
+        }
+
         return CommodityPrice.builder()
                 .price(new BigDecimal(finageCommodity.getPrice()))
                 .currency("USD")
@@ -42,7 +49,14 @@ public class FinageService {
 
     public CommodityPrice getCryptocurrencyPrice(Commodity commodity) {
         String url = buildUrl(commodity.getIndex(), CRYPTO);
-        FinageCommodity finageCommodity = restTemplate.getForObject(url, FinageCommodity.class);
+        FinageCommodity finageCommodity;
+        try {
+            finageCommodity = restTemplate.getForObject(url, FinageCommodity.class);
+        } catch (Exception exception) {
+            log.error("Wrong index for crypto " + commodity);
+            return null;
+        }
+
         return CommodityPrice.builder()
                 .price(new BigDecimal(finageCommodity.getPrice()))
                 .currency("USD")
