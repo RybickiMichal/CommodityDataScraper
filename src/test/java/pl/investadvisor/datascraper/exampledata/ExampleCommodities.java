@@ -6,7 +6,8 @@ import java.util.List;
 
 import static pl.investadvisor.datascraper.model.CommodityType.CRYPTO;
 import static pl.investadvisor.datascraper.model.CommodityType.ETF;
-import static pl.investadvisor.datascraper.model.CommodityType.STOCK;
+import static pl.investadvisor.datascraper.model.CommodityType.PL_STOCK;
+import static pl.investadvisor.datascraper.model.CommodityType.US_STOCK;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.FINAGE;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.PULS_BIZNSU;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.YAHOO_FINANCE;
@@ -17,7 +18,7 @@ public class ExampleCommodities {
         return List.of(Commodity.builder()
                         .commodityId("1")
                         .index("AMZN")
-                        .commodityType(STOCK)
+                        .commodityType(US_STOCK)
                         .scrapingStrategy(YAHOO_FINANCE)
                         .build(),
                 Commodity.builder()
@@ -25,14 +26,14 @@ public class ExampleCommodities {
                         .index("LWB")
                         .scrapingStrategy(PULS_BIZNSU)
                         .dataSource("https://notowania.pb.pl/instrument/PLLWBGD00016/bogdanka/profil")
-                        .commodityType(STOCK)
+                        .commodityType(PL_STOCK)
                         .build(),
                 Commodity.builder()
                         .commodityId("3")
                         .index("lpp")
                         .scrapingStrategy(PULS_BIZNSU)
                         .dataSource("https://notowania.pb.pl/instrument/PLLPP0000011/lpp")
-                        .commodityType(STOCK)
+                        .commodityType(PL_STOCK)
                         .build(),
                 Commodity.builder()
                         .commodityId("4")

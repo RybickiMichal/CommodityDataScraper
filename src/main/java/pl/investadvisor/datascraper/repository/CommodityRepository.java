@@ -18,8 +18,4 @@ public class CommodityRepository {
         return dynamoDBMapper.scan(Commodity.class, new DynamoDBScanExpression());
     }
 
-    public Commodity saveCommodity(Commodity commodity) {
-        dynamoDBMapper.save(commodity);
-        return commodity;
-    }
 }
