@@ -18,4 +18,9 @@ public class CommodityRepository {
         return dynamoDBMapper.scan(Commodity.class, new DynamoDBScanExpression());
     }
 
+    public List<Commodity> saveCommodities(List<Commodity> commodities){
+        commodities.forEach(commodity -> dynamoDBMapper.save(commodity));
+        return commodities;
+    }
+
 }

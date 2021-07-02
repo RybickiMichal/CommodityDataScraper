@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.investadvisor.datascraper.model.Commodity;
-import pl.investadvisor.datascraper.model.CommodityPrice;
 import pl.investadvisor.datascraper.model.CommodityType;
 import pl.investadvisor.datascraper.model.FinageCommodity;
 
@@ -29,7 +28,7 @@ public class FinageService {
 
     private RestTemplate restTemplate;
 
-    public CommodityPrice getEtfPrice(Commodity commodity) {
+    public Commodity getEtfPrice(Commodity commodity) {
         String url = buildUrl(commodity.getIndex(), ETF);
         FinageCommodity finageCommodity;
         try {
@@ -39,15 +38,13 @@ public class FinageService {
             return null;
         }
 
-        return CommodityPrice.builder()
-                .price(new BigDecimal(finageCommodity.getPrice()))
-                .currency("USD")
-                .date(new Date())
-                .commodityId(commodity.getCommodityId())
-                .build();
+        commodity.setPrice(new BigDecimal(finageCommodity.getPrice()));
+        commodity.setLastScrapingDate(new Date());
+        commodity.setCurrency("USD");
+        return commodity;
     }
 
-    public CommodityPrice getCryptocurrencyPrice(Commodity commodity) {
+    public Commodity getCryptocurrencyPrice(Commodity commodity) {
         String url = buildUrl(commodity.getIndex(), CRYPTO);
         FinageCommodity finageCommodity;
         try {
@@ -57,12 +54,11 @@ public class FinageService {
             return null;
         }
 
-        return CommodityPrice.builder()
-                .price(new BigDecimal(finageCommodity.getPrice()))
-                .currency("USD")
-                .date(new Date())
-                .commodityId(commodity.getCommodityId())
-                .build();
+        commodity.setPrice(new BigDecimal(finageCommodity.getPrice()));
+        commodity.setLastScrapingDate(new Date());
+        commodity.setCurrency("USD");
+
+        return commodity;
     }
 
     private String buildUrl(String index, CommodityType commodityType) {

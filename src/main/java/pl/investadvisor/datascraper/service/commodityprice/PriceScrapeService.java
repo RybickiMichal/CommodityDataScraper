@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.investadvisor.datascraper.model.Commodity;
-import pl.investadvisor.datascraper.model.CommodityPrice;
-import pl.investadvisor.datascraper.repository.CommodityPriceRepository;
 import pl.investadvisor.datascraper.repository.CommodityRepository;
 
 import java.util.ArrayList;
@@ -26,64 +24,63 @@ public class PriceScrapeService {
     private PulsBiznesuService pulsBiznesuService;
     private YahooFinanceService yahooFinanceService;
     private FinageService finageService;
-    private CommodityPriceRepository commodityPriceRepository;
     private CommodityRepository commodityRepository;
 
     public void scrapePrices() {
         List<Commodity> commodities = commodityRepository.getAllCommodities();
 
-        List<CommodityPrice> commodityPrices = new ArrayList();
-        commodityPrices.addAll(scrapePricesFromFinage(commodities.stream()
+        List<Commodity> commoditiesWithPrices = new ArrayList();
+        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.stream()
                 .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
-        commodityPrices.addAll(scrapePricesFromPulsBiznesu(commodities.stream()
+        commoditiesWithPrices.addAll(scrapePricesFromPulsBiznesu(commodities.stream()
                 .filter(commodity -> PULS_BIZNSU.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
-        commodityPrices.addAll(scrapePricesFromYahooFinance(commodities.stream()
+        commoditiesWithPrices.addAll(scrapePricesFromYahooFinance(commodities.stream()
                 .filter(commodity -> YAHOO_FINANCE.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
-        commodityPriceRepository.saveCommodityPrices(commodityPrices);
+        commodityRepository.saveCommodities(commoditiesWithPrices);
     }
 
     // TODO rewrite below methods to streams
-    private List<CommodityPrice> scrapePricesFromFinage(List<Commodity> commodities) {
-        List<CommodityPrice> commodityPrices = new ArrayList();
+    private List<Commodity> scrapePricesFromFinage(List<Commodity> commodities) {
+        List<Commodity> commoditiesWithPrices = new ArrayList();
         for (Commodity commodity : commodities) {
             log.info("starting scrape/fetch " + commodity);
-            CommodityPrice commodityPrice;
+            Commodity commodityWithPrice;
             if (CRYPTO.equals(commodity.getCommodityType())) {
-                commodityPrice = finageService.getCryptocurrencyPrice(commodity);
+                commodityWithPrice = finageService.getCryptocurrencyPrice(commodity);
             } else {
-                commodityPrice = finageService.getEtfPrice(commodity);
+                commodityWithPrice = finageService.getEtfPrice(commodity);
             }
-            if (nonNull(commodityPrice)) {
-                commodityPrices.add(commodityPrice);
+            if (nonNull(commodityWithPrice)) {
+                commoditiesWithPrices.add(commodityWithPrice);
             }
         }
-        return commodityPrices;
+        return commoditiesWithPrices;
     }
 
-    private List<CommodityPrice> scrapePricesFromPulsBiznesu(List<Commodity> commodities) {
-        List<CommodityPrice> commodityPrices = new ArrayList();
+    private List<Commodity> scrapePricesFromPulsBiznesu(List<Commodity> commodities) {
+        List<Commodity> commoditiesWithPrices = new ArrayList();
         for (Commodity commodity : commodities) {
             log.info("starting scrape/fetch " + commodity);
-            CommodityPrice stockPrice = pulsBiznesuService.getStockPrice(commodity);
+            Commodity stockPrice = pulsBiznesuService.getStockPrice(commodity);
             if (nonNull(stockPrice)) {
-                commodityPrices.add(stockPrice);
+                commoditiesWithPrices.add(stockPrice);
             }
         }
-        return commodityPrices;
+        return commoditiesWithPrices;
     }
 
-    private List<CommodityPrice> scrapePricesFromYahooFinance(List<Commodity> commodities) {
-        List<CommodityPrice> commodityPrices = new ArrayList();
+    private List<Commodity> scrapePricesFromYahooFinance(List<Commodity> commodities) {
+        List<Commodity> commoditiesWithPrices = new ArrayList();
         for (Commodity commodity : commodities) {
             log.info("starting scrape/fetch " + commodity);
-            CommodityPrice stockPrice = yahooFinanceService.getStockPrice(commodity);
+            Commodity stockPrice = yahooFinanceService.getStockPrice(commodity);
             if (nonNull(stockPrice)) {
-                commodityPrices.add(stockPrice);
+                commoditiesWithPrices.add(stockPrice);
             }
         }
-        return commodityPrices;
+        return commoditiesWithPrices;
     }
 }

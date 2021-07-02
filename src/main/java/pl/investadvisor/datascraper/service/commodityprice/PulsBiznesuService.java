@@ -6,7 +6,6 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import pl.investadvisor.datascraper.exception.NoDataException;
 import pl.investadvisor.datascraper.model.Commodity;
-import pl.investadvisor.datascraper.model.CommodityPrice;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,7 +15,7 @@ import java.util.Date;
 @Slf4j
 public class PulsBiznesuService {
 
-    public CommodityPrice getStockPrice(Commodity commodity) {
+    public Commodity getStockPrice(Commodity commodity) {
         try {
             return scrapeStockPrice(commodity);
         } catch (IOException e) {
@@ -24,7 +23,7 @@ public class PulsBiznesuService {
         }
     }
 
-    private CommodityPrice scrapeStockPrice(Commodity commodity) throws IOException {
+    private Commodity scrapeStockPrice(Commodity commodity) throws IOException {
         Document document;
         try {
             document = Jsoup.connect(commodity.getDataSource()).get();
@@ -37,11 +36,11 @@ public class PulsBiznesuService {
                 .replaceAll(" ", "")
                 .replace(",", ".")
                 .replace("zł", "");
-        return CommodityPrice.builder()
-                .commodityId(commodity.getCommodityId())
-                .price(new BigDecimal(price))
-                .currency("PLN")
-                .date(new Date())
-                .build();
+
+        commodity.setPrice(new BigDecimal(price));
+        commodity.setLastScrapingDate(new Date());
+        commodity.setCurrency("PLN");
+
+        return commodity;
     }
 }
