@@ -13,7 +13,7 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static pl.investadvisor.datascraper.model.CommodityType.CRYPTO;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.FINAGE;
-import static pl.investadvisor.datascraper.model.ScrapingStrategy.PULS_BIZNSU;
+import static pl.investadvisor.datascraper.model.ScrapingStrategy.PULS_BIZNESU;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.YAHOO_FINANCE;
 
 @AllArgsConstructor
@@ -34,7 +34,7 @@ public class PriceScrapeService {
                 .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
         commoditiesWithPrices.addAll(scrapePricesFromPulsBiznesu(commodities.stream()
-                .filter(commodity -> PULS_BIZNSU.equals(commodity.getScrapingStrategy()))
+                .filter(commodity -> PULS_BIZNESU.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
         commoditiesWithPrices.addAll(scrapePricesFromYahooFinance(commodities.stream()
                 .filter(commodity -> YAHOO_FINANCE.equals(commodity.getScrapingStrategy()))

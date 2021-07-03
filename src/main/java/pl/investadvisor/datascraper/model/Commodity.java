@@ -38,6 +38,10 @@ public class Commodity {
     @NonNull
     private CommodityType commodityType;
 
+    @DynamoDBTypeConvertedEnum
+    @NonNull
+    private CommoditySector commoditySector;
+
     @NonNull
     private String currency;
 
