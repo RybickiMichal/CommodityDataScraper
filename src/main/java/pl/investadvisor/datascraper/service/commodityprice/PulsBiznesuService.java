@@ -15,9 +15,17 @@ import java.util.Date;
 @Slf4j
 public class PulsBiznesuService {
 
-    public Commodity getStockPrice(Commodity commodity) {
+    public Commodity setNewStockPrice(Commodity commodity) {
         try {
             return scrapeStockPrice(commodity);
+        } catch (IOException e) {
+            throw new NoDataException("No data from Puls Biznesu for " + commodity.getIndex());
+        }
+    }
+
+    public Commodity setNewMetalOrResourcePrice(Commodity commodity) {
+        try {
+            return scrapeMetalOrResourcePrice(commodity);
         } catch (IOException e) {
             throw new NoDataException("No data from Puls Biznesu for " + commodity.getIndex());
         }
@@ -33,13 +41,35 @@ public class PulsBiznesuService {
         }
 
         String price = document.getElementsByClass("profilLast").text()
-                .replaceAll(" ", "")
                 .replace(",", ".")
-                .replace("zł", "");
+                .replace("zł", "")
+                .trim();
 
         commodity.setPrice(new BigDecimal(price));
         commodity.setLastScrapingDate(new Date());
         commodity.setCurrency("PLN");
+
+        return commodity;
+    }
+
+    private Commodity scrapeMetalOrResourcePrice(Commodity commodity) throws IOException {
+        Document document;
+        try {
+            document = Jsoup.connect(commodity.getDataSource()).get();
+        } catch (Exception exception) {
+            log.error("Wrong index or website for stock " + commodity);
+            return null;
+        }
+        String priceAndCurrency = document.getElementsByClass("profilLast").text();
+
+        String price = priceAndCurrency.replaceAll("[^0-9.]", "");;
+        String currency = priceAndCurrency.substring(document.getElementsByClass("profilLast").text().indexOf(' '))
+                .replaceAll("[0-9.]", "")
+                .replace(",", "")
+                .trim();
+        commodity.setPrice(new BigDecimal(price));
+        commodity.setLastScrapingDate(new Date());
+        commodity.setCurrency(currency);
 
         return commodity;
     }

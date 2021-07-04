@@ -28,7 +28,7 @@ public class FinageService {
 
     private RestTemplate restTemplate;
 
-    public Commodity getEtfPrice(Commodity commodity) {
+    public Commodity setNewEtfPrice(Commodity commodity) {
         String url = buildUrl(commodity.getIndex(), ETF);
         FinageCommodity finageCommodity;
         try {
@@ -44,7 +44,7 @@ public class FinageService {
         return commodity;
     }
 
-    public Commodity getCryptocurrencyPrice(Commodity commodity) {
+    public Commodity setNewCryptocurrencyPrice(Commodity commodity) {
         String url = buildUrl(commodity.getIndex(), CRYPTO);
         FinageCommodity finageCommodity;
         try {

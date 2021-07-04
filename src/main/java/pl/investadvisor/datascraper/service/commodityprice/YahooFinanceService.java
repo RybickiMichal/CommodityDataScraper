@@ -18,7 +18,7 @@ public class YahooFinanceService {
 
     private Stock stock;
 
-    public Commodity getStockPrice(Commodity commodity) {
+    public Commodity setNewStockPrice(Commodity commodity) {
         try {
             return fetchStockPrice(commodity);
         } catch (IOException e) {
