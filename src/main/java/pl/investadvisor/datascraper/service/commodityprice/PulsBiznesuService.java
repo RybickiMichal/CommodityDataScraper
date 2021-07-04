@@ -18,7 +18,7 @@ public class PulsBiznesuService {
     public Commodity setNewStockPrice(Commodity commodity) {
         try {
             return scrapeStockPrice(commodity);
-        } catch (IOException e) {
+        } catch (IOException exception) {
             throw new NoDataException("No data from Puls Biznesu for " + commodity.getIndex());
         }
     }
@@ -26,7 +26,7 @@ public class PulsBiznesuService {
     public Commodity setNewMetalOrResourcePrice(Commodity commodity) {
         try {
             return scrapeMetalOrResourcePrice(commodity);
-        } catch (IOException e) {
+        } catch (IOException exception) {
             throw new NoDataException("No data from Puls Biznesu for " + commodity.getIndex());
         }
     }
@@ -41,9 +41,8 @@ public class PulsBiznesuService {
         }
 
         String price = document.getElementsByClass("profilLast").text()
-                .replace(",", ".")
-                .replace("zł", "")
-                .trim();
+                .replaceAll("[^0-9.,]", "")
+                .replaceAll(",", ".");
 
         commodity.setPrice(new BigDecimal(price));
         commodity.setLastScrapingDate(new Date());
@@ -62,7 +61,9 @@ public class PulsBiznesuService {
         }
         String priceAndCurrency = document.getElementsByClass("profilLast").text();
 
-        String price = priceAndCurrency.replaceAll("[^0-9.]", "");;
+        String price = priceAndCurrency
+                .replaceAll("[^0-9.,]", "")
+                .replaceAll(",", ".");
         String currency = priceAndCurrency.substring(document.getElementsByClass("profilLast").text().indexOf(' '))
                 .replaceAll("[0-9.]", "")
                 .replace(",", "")

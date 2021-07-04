@@ -21,7 +21,7 @@ public class YahooFinanceService {
     public Commodity setNewStockPrice(Commodity commodity) {
         try {
             return fetchStockPrice(commodity);
-        } catch (IOException e) {
+        } catch (IOException exception) {
             throw new NoDataException("No data from Yahoo Finance for " + commodity.getIndex());
         }
     }

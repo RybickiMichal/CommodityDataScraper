@@ -31,14 +31,14 @@ public class PriceScrapeService {
         List<Commodity> commodities = commodityRepository.getAllCommodities();
 
         List<Commodity> commoditiesWithPrices = new ArrayList();
-        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.stream()
-                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
-                .collect(toList())));
         commoditiesWithPrices.addAll(scrapePricesFromPulsBiznesu(commodities.stream()
                 .filter(commodity -> PULS_BIZNESU.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
         commoditiesWithPrices.addAll(scrapePricesFromYahooFinance(commodities.stream()
                 .filter(commodity -> YAHOO_FINANCE.equals(commodity.getScrapingStrategy()))
+                .collect(toList())));
+        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.stream()
+                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
         commodityRepository.saveCommodities(commoditiesWithPrices);
     }
