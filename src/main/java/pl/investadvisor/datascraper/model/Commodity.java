@@ -43,7 +43,7 @@ public class Commodity {
     private CommoditySector commoditySector;
 
     @DynamoDBTypeConvertedEnum
-    private RawMaterial rawMaterial;
+    private IndustrialRawMaterial industrialRawMaterial;
 
     @NonNull
     private String currency;
