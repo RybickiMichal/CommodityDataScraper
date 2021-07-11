@@ -53,6 +53,23 @@ public class Commodity {
 
     private String comment;
 
+    @NonNull
+    private BigDecimal lowOneYear;
+    @NonNull
+    private BigDecimal highOneYear;
+    @NonNull
+    private BigDecimal lowThreeYears;
+    @NonNull
+    private BigDecimal highThreeYears;
+    @NonNull
+    private BigDecimal lowFiveYears;
+    @NonNull
+    private BigDecimal highFiveYears;
+    @NonNull
+    private BigDecimal lowTenYears;
+    @NonNull
+    private BigDecimal highTenYears;
+
     @DynamoDBTypeConvertedTimestamp(pattern = "yyyyMMddHHmmssSSS")
     @NonNull
     private Date lastScrapingDate;

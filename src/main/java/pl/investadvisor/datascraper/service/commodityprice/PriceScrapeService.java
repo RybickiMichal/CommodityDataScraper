@@ -15,6 +15,7 @@ import static pl.investadvisor.datascraper.model.CommodityType.AGRO_STOCK;
 import static pl.investadvisor.datascraper.model.CommodityType.CRYPTO;
 import static pl.investadvisor.datascraper.model.CommodityType.MINING_ENERGY_STOCK_OR_ETF;
 import static pl.investadvisor.datascraper.model.CommodityType.PL_STOCK;
+import static pl.investadvisor.datascraper.model.ScrapingStrategy.FINAGE;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.PULS_BIZNESU;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.YAHOO_FINANCE;
 
@@ -38,10 +39,10 @@ public class PriceScrapeService {
         commoditiesWithPrices.addAll(scrapePricesFromYahooFinance(commodities.parallelStream()
                 .filter(commodity -> YAHOO_FINANCE.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
-//        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.parallelStream()
-//                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
-//                .collect(toList())));
-//        commodityRepository.saveCommodities(commoditiesWithPrices);
+        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.parallelStream()
+                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
+                .collect(toList())));
+        commodityRepository.saveCommodities(commoditiesWithPrices);
     }
 
     // TODO rewrite below methods to streams
@@ -88,11 +89,14 @@ public class PriceScrapeService {
         List<Commodity> commoditiesWithPrices = new ArrayList();
         for (Commodity commodity : commodities) {
             log.info("starting scrape/fetch " + commodity);
-            Commodity stockPrice = yahooFinanceService.setNewStockPrice(commodity);
-            if (nonNull(stockPrice)) {
-                commoditiesWithPrices.add(stockPrice);
+            Commodity stockWithPrice = yahooFinanceService.setNewStockPrice(commodity);
+            if (nonNull(stockWithPrice)) {
+                commoditiesWithPrices.add(stockWithPrice);
             }
         }
+        commoditiesWithPrices.forEach(commodity -> {
+            log.info(commodity.toString());
+        });
         return commoditiesWithPrices;
     }
 }
