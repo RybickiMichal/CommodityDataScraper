@@ -43,7 +43,7 @@ public class Commodity {
     private CommoditySector commoditySector;
 
     @DynamoDBTypeConvertedEnum
-    private IndustrialRawMaterial industrialRawMaterial;
+    private RawMaterial rawMaterial;
 
     @NonNull
     private String currency;
@@ -51,7 +51,6 @@ public class Commodity {
     @NonNull
     private BigDecimal price;
 
-    @NonNull
     private String comment;
 
     @DynamoDBTypeConvertedTimestamp(pattern = "yyyyMMddHHmmssSSS")

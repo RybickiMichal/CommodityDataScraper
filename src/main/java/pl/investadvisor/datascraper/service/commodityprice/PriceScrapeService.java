@@ -11,9 +11,10 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
+import static pl.investadvisor.datascraper.model.CommodityType.AGRO_STOCK;
 import static pl.investadvisor.datascraper.model.CommodityType.CRYPTO;
+import static pl.investadvisor.datascraper.model.CommodityType.MINING_ENERGY_STOCK_OR_ETF;
 import static pl.investadvisor.datascraper.model.CommodityType.PL_STOCK;
-import static pl.investadvisor.datascraper.model.ScrapingStrategy.FINAGE;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.PULS_BIZNESU;
 import static pl.investadvisor.datascraper.model.ScrapingStrategy.YAHOO_FINANCE;
 
@@ -31,16 +32,16 @@ public class PriceScrapeService {
         List<Commodity> commodities = commodityRepository.getAllCommodities();
 
         List<Commodity> commoditiesWithPrices = new ArrayList();
-        commoditiesWithPrices.addAll(scrapePricesFromPulsBiznesu(commodities.stream()
+        commoditiesWithPrices.addAll(scrapePricesFromPulsBiznesu(commodities.parallelStream()
                 .filter(commodity -> PULS_BIZNESU.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
-        commoditiesWithPrices.addAll(scrapePricesFromYahooFinance(commodities.stream()
+        commoditiesWithPrices.addAll(scrapePricesFromYahooFinance(commodities.parallelStream()
                 .filter(commodity -> YAHOO_FINANCE.equals(commodity.getScrapingStrategy()))
                 .collect(toList())));
-        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.stream()
-                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
-                .collect(toList())));
-        commodityRepository.saveCommodities(commoditiesWithPrices);
+//        commoditiesWithPrices.addAll(scrapePricesFromFinage(commodities.parallelStream()
+//                .filter(commodity -> FINAGE.equals(commodity.getScrapingStrategy()))
+//                .collect(toList())));
+//        commodityRepository.saveCommodities(commoditiesWithPrices);
     }
 
     // TODO rewrite below methods to streams
@@ -66,7 +67,7 @@ public class PriceScrapeService {
         for (Commodity commodity : commodities) {
             log.info("starting scrape/fetch " + commodity);
             Commodity commodityWithActualPrice;
-            if (PL_STOCK.equals(commodity.getCommodityType())) {
+            if (isPolishOrRawMaterialStock(commodity)) {
                 commodityWithActualPrice = pulsBiznesuService.setNewStockPrice(commodity);
             } else {
                 commodityWithActualPrice = pulsBiznesuService.setNewMetalOrResourcePrice(commodity);
@@ -77,6 +78,10 @@ public class PriceScrapeService {
             }
         }
         return commoditiesWithPrices;
+    }
+
+    private boolean isPolishOrRawMaterialStock(Commodity commodity) {
+        return PL_STOCK.equals(commodity.getCommodityType()) || MINING_ENERGY_STOCK_OR_ETF.equals(commodity.getCommodityType()) || AGRO_STOCK.equals(commodity.getCommodityType());
     }
 
     private List<Commodity> scrapePricesFromYahooFinance(List<Commodity> commodities) {
