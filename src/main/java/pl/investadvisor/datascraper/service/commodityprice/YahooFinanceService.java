@@ -6,20 +6,21 @@ import pl.investadvisor.datascraper.exception.NoDataException;
 import pl.investadvisor.datascraper.model.Commodity;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.Interval;
+import yahoofinance.histquotes.HistoricalQuote;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
 import static java.util.Calendar.getInstance;
 import static java.util.Objects.isNull;
-import static yahoofinance.histquotes.Interval.MONTHLY;
-import static yahoofinance.histquotes.Interval.WEEKLY;
+import static org.joda.time.LocalDate.fromCalendarFields;
+import static yahoofinance.histquotes.Interval.DAILY;
 
 @Service
 @Slf4j
@@ -50,26 +51,34 @@ public class YahooFinanceService {
     }
 
     private void setHighLow(Commodity commodity, Stock stock) throws IOException {
-        commodity.setLowOneYear(getLow(stock, 1, WEEKLY));
-        commodity.setLowThreeYears(getLow(stock, 3, WEEKLY));
-        commodity.setLowFiveYears(getLow(stock, 5, MONTHLY));
-        commodity.setLowTenYears(getLow(stock, 10, MONTHLY));
+        List<HistoricalQuote> tenYearsHistoricalQuoteDaily = stock.getHistory(
+                new GregorianCalendar(getInstance().get(YEAR) - 10, getInstance().get(MONTH), 1), DAILY);
+        commodity.setLowOneYear(getLow(tenYearsHistoricalQuoteDaily, 1));
+        commodity.setLowThreeYears(getLow(tenYearsHistoricalQuoteDaily, 3));
+        commodity.setLowFiveYears(getLow(tenYearsHistoricalQuoteDaily, 5));
+        commodity.setLowTenYears(getLow(tenYearsHistoricalQuoteDaily, 10));
 
-        commodity.setHighOneYear(getHigh(stock, 1, WEEKLY));
-        commodity.setHighThreeYears(getHigh(stock, 3, WEEKLY));
-        commodity.setHighFiveYears(getHigh(stock, 5, MONTHLY));
-        commodity.setHighTenYears(getHigh(stock, 10, MONTHLY));
+        commodity.setHighOneYear(getHigh(tenYearsHistoricalQuoteDaily, 1));
+        commodity.setHighThreeYears(getHigh(tenYearsHistoricalQuoteDaily, 3));
+        commodity.setHighFiveYears(getHigh(tenYearsHistoricalQuoteDaily, 5));
+        commodity.setHighTenYears(getHigh(tenYearsHistoricalQuoteDaily, 10));
     }
 
-    private BigDecimal getHigh(Stock stock, int years, Interval interval) throws IOException {
-        return stock.getHistory(new GregorianCalendar(getInstance().get(YEAR) - years, getInstance().get(MONTH), 1), interval).stream()
-                .map(historicalQuote -> historicalQuote.getLow())
+    private BigDecimal getHigh(List<HistoricalQuote> tenYearsHistoricalQuoteWeekly, int years) {
+        return tenYearsHistoricalQuoteWeekly.parallelStream()
+                .filter(historicalQuote -> historicalQuote.getDate().getTime().after(fromCalendarFields(
+                        new GregorianCalendar(getInstance().get(YEAR) - years, getInstance().get(MONTH), 1))
+                        .toDate()))
+                .map(historicalQuote -> historicalQuote.getHigh())
                 .max(Comparator.comparing(BigDecimal::toBigInteger))
                 .orElse(BigDecimal.ZERO);
     }
 
-    private BigDecimal getLow(Stock stock, int years, Interval interval) throws IOException {
-        return stock.getHistory(new GregorianCalendar(getInstance().get(YEAR) - years, getInstance().get(MONTH), 1), interval).stream()
+    private BigDecimal getLow(List<HistoricalQuote> tenYearsHistoricalQuoteWeekly, int years) {
+        return tenYearsHistoricalQuoteWeekly.parallelStream()
+                .filter(historicalQuote -> historicalQuote.getDate().getTime().after(fromCalendarFields(
+                        new GregorianCalendar(getInstance().get(YEAR) - years, getInstance().get(MONTH), 1))
+                        .toDate()))
                 .map(historicalQuote -> historicalQuote.getLow())
                 .min(Comparator.comparing(BigDecimal::toBigInteger))
                 .orElse(BigDecimal.ZERO);
